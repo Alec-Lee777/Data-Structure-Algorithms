@@ -74,6 +74,7 @@ public class T2023_3_3 {
                 ret.addAll(set2);
             }
         }
+        return ret;
     }
 
     void run() throws IOException {
