@@ -16,6 +16,7 @@ public class T2023_3_2_method2{
     int[] needDay = new int[N];
     int[] needResource = new int[N];
 
+    // 检查是否能够用现有资源达到 mid 天完工的条件
     boolean check(int mid){
         long sum = 0;
         for (int i = 0; i < n; i++) {
