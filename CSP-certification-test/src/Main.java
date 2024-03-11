@@ -13,6 +13,6 @@ import java.io.IOException;
 public class Main{
 
     public static void main(String args[]) throws IOException {
-        new T2023_5_1().run();
+        new T2023_5_2().run();
     }
 }
