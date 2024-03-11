@@ -13,6 +13,7 @@ import java.util.*;
 public class T2023_3_3 {
 
     int n;
+    // r.get(attr).get(val).表示属性为attr且值为val的用户集合<ArrayList>
     static Map<Integer, Map<Integer, List<Integer>>> r = new HashMap<>();
 
     public Set<Integer> check(String s){
@@ -78,7 +79,7 @@ public class T2023_3_3 {
     }
 
     void run() throws IOException {
-        // 用 Scannker 不用 BufferedReader，因为字符串处理的内容太多了
+        // 用 Scanner 不用 BufferedReader，因为字符串处理的内容太多了
         Scanner in = new Scanner(System.in);
         n = in.nextInt();
         // 读取所有用户信息
@@ -96,15 +97,15 @@ public class T2023_3_3 {
 
         int m = in.nextInt();
         while(m-- > 0){
+            // ans 里面存储符合条件的用户DN
             List<Integer> ans = new ArrayList<>(check(in.next()));
             if(ans.size() == 0) System.out.println();
             else{
                 Collections.sort(ans);
-                for(int id : ans) System.out.println(id + " ");
+                for(int id : ans) System.out.print(id + " ");
                 System.out.println();
             }
         }
-
     }
 
 }
