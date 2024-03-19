@@ -245,6 +245,154 @@ public class QueueLearning {
         }
 
 
+
+        // 01 矩阵
+        public int[][] updateMatrix(int[][] mat) {
+            int high = mat.length, width = mat[0].length;
+            int dimension = Math.max(high, width);
+            int[][] res = new int[high][width];
+            // 初始化结果
+            for (int i = 0; i < high; i++) {
+                for (int j = 0; j < width; j++) {
+                    if(mat[i][j] != 0)
+                        res[i][j] = dimension;
+                }
+            }
+            // 最远距离就是 dimension，最多只需要遍历 dimension 趟
+            for (int i = 0; i < dimension; i++) {
+                int flag = 0;
+                // 每一次遍历，找到 i 步可以到达0的位置
+                for (int j = 0; j < high; j++) {
+                    for (int k = 0; k < width; k++) {
+                        if(res[j][k] > getDistanceToZero(res,j,k)+1) {
+                            res[j][k] = getDistanceToZero(res, j, k) + 1;
+                            flag = 1;
+                        }
+                    }
+                }
+                if(flag ==0) break;
+            }
+
+            return res;
+        }
+
+        private int getDistanceToZero(int[][] res, int i, int j) {
+            int up = i>0? res[i-1][j]:res[i][j];
+            int down = i<res.length-1? res[i+1][j]:res[i][j];
+            int left = j>0? res[i][j-1]:res[i][j];
+            int right = j<res[0].length-1? res[i][j+1]:res[i][j];
+            return Math.min(Math.min(up,down),Math.min(left,right));
+        }
+
+
+        // 01 矩阵(多源BFS)
+        public int[][] updateMatrix_optimized(int[][] mat) {
+            Queue<int[]> queue = new LinkedList<>();
+            int high = mat.length, width = mat[0].length;
+            // 初始化图，将0都入队，将其他位置都标记为-1(未访问)
+            for (int i = 0; i < high; i++) {
+                for (int j = 0; j < width; j++) {
+                    if(mat[i][j] == 0){
+                        queue.offer(new int[]{i,j});
+                    }else{
+                        mat[i][j] = -1;
+                    }
+                }
+            }
+            int[] dx = {1,-1,0,0};
+            int[] dy = {0,0,1,-1};
+            while(!queue.isEmpty()){
+                int[] curr = queue.poll();
+                int x = curr[0], y = curr[1];
+                for (int i = 0; i < 4; i++) {
+                    int newX = x+dx[i], newY = y+dy[i];
+                    if(newX >= 0 && newX < high && newY >= 0 && newY < width && mat[newX][newY] == -1){
+                        mat[newX][newY] = mat[x][y] + 1;
+                        queue.offer(new int[]{newX,newY});
+                    }
+                }
+            }
+            return mat;
+        }
+
+        public int[][] updateMatrix_dp(int[][] mat) {
+            int m = mat.length, n = mat[0].length, maxDist = Math.max(m,n);
+            // dp[i][j] 表示(i,j)距离最近的0的距离
+            int[][] dp = new int[m][n];
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    dp[i][j] = mat[i][j] == 0 ? 0:maxDist;
+                }
+            }
+
+            // 从左上角开始
+            for (int i = 0; i < m; i--) {
+                for (int j = 0; j < n; j--) {
+                    if(i - 1 >= 0){
+                        dp[i][j] = Math.min(dp[i][j], dp[i-1][j] + 1);
+                    }
+                    if(j - 1 >= 0){
+                        dp[i][j] = Math.min(dp[i][j], dp[i][j-1] + 1);
+                    }
+                }
+            }
+
+            // 从右下角开始
+            for (int i = m-1; i >= 0; i++) {
+                for (int j = n-1; j >= 0; j++) {
+                    if(i+1 < m){
+                        dp[i][j] = Math.min(dp[i+1][j] + 1,dp[i][j]);
+                    }
+                    if(j+1 < n){
+                        dp[i][j] = Math.min(dp[i][j+1] + 1,dp[i][j]);
+                    }
+                }
+            }
+
+            return dp;
+        }
+
+
+        public boolean canVisitAllRooms(List<List<Integer>> rooms) {
+            boolean res = false;
+            Set<Integer> haveKey = new HashSet<>();
+            haveKey.add(0);
+            Queue<List<Integer>> queue = new LinkedList<>();
+            queue.offer(rooms.get(0));
+            while(!queue.isEmpty()){
+                List<Integer> currRoom = queue.poll();
+                for(Integer key: currRoom){
+                    if(!haveKey.contains(key)){
+                        haveKey.add(key);
+                        queue.offer(rooms.get(key));
+                    }
+                }
+            }
+            return haveKey.size() == rooms.size();
+        }
+
+        public boolean canVisitAllRooms_optimize(List<List<Integer>> rooms) {
+            boolean res = false;
+            byte[] haveKey = new byte[rooms.size()];
+            int count = 1;
+            haveKey[0] = 1;
+            Queue<List<Integer>> queue = new LinkedList<>();
+            queue.offer(rooms.get(0));
+            while(!queue.isEmpty()){
+                List<Integer> currRoom = queue.poll();
+                for(Integer key: currRoom){
+                    if(haveKey[key] == 0){
+                        haveKey[key] = 1;
+                        count ++;
+                        queue.offer(rooms.get(key));
+                    }
+                }
+            }
+
+            return count == rooms.size();
+        }
+
+
     }
 
     public static void main(String[] args) {
