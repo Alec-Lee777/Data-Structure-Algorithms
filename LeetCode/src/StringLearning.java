@@ -353,10 +353,73 @@ public class StringLearning {
         }
 
 
+        // 字符串解码
+        // 思路：递归处理，这个递归函数用于解析 "数字[子串]" 中的 "子串" 部分
+        public String decodeString(String s) {
+            char[] strs = s.toCharArray();
+            // 存储子串的结果
+            StringBuilder once = new StringBuilder();
+            // pos 用于遍历子串
+            int pos = 0;
+            // 当 pos 大于strs.length时说明这是最外层，不再往后解析
+            // while中通过一些方法会跳过内部的']'，所以pos==']'的时候表明已经解析完成
+            while(pos < strs.length && strs[pos] != ']'){
+                // 普通字母不用重复
+                if(!isNumber(strs[pos]) && strs[pos] != '[' && strs[pos] != ']') once.append(strs[pos]);
+                // 如果遇见数字，说明后面有需要处理的递归
+                if(isNumber(strs[pos])){
+                    // 获取内层递归"数字[子串]"中的"数字"number
+                    int recurLeft = pos;
+                    while(isNumber(strs[pos])){
+                        pos++;
+                    }// 退出时strs[pos]指向左括号
+
+                    // 用栈查找递归的工作范围, pos会停留在']'的下一位字符或字符串末尾的下一位
+                    int countLeft = 1, right = pos+1;
+                    while(countLeft > 0 && right < s.length()){
+                        if(strs[right] == '[') countLeft++;
+                        if(strs[right] == ']') countLeft--;
+                        right++;
+                    }
+
+                    int number = Integer.parseInt(s.substring(recurLeft, pos));
+                    pos++; // pos跳过左括号
+                    // 给结果添加上number个递归子串
+                    // 注意：这里一定要将子串先计算再while，否则会做很多重复的递归运算
+                    String subString = decodeString(s.substring(pos));
+                    while(number -- > 0){
+                        once.append(subString);
+                    }
+                    // pos后移到递归处理的结尾右括号']'
+                    // 注意：这里不能直接去找 pos 后面的第一个']',因为可能还有内层递归
+                    pos=right-1;
+                }
+                // 如果没有递归则处理下一位，如果处理了递归就跳过右括号
+                pos++;
+            }
+
+            return once.toString();
+        }
+
+        private Boolean isNumber(char c){
+            return c >= '0' && c <= '9';
+        }
+
+
+
+
+
+
     }
     public static void main(String[] args) {
-        int[] nums = new int[]{4,5,6,7,0,1,2};
-        System.out.println(new Solution().findMin(nums));
+
+
+
+/*        String s = "2[a]c";
+        System.out.println(new Solution().decodeString(s));*/
+
+/*        int[] nums = new int[]{4,5,6,7,0,1,2};
+        System.out.println(new Solution().findMin(nums));*/
 
 /*        String s = "Let's take LeetCode contest";
         System.out.println(new Solution().reverseWords_3_optimized(s));*/
