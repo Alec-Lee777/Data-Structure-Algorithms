@@ -201,7 +201,7 @@ public class LinkedList {
             return h;
         }
 
-        public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+/*        public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
             ListNode head = new ListNode(), tail = head;
             ListNode p1=list1, p2 = list2;
             while(list1 != null && list2 != null){
@@ -230,11 +230,11 @@ public class LinkedList {
                 list2 = p2;
             }
             return head.next;
-        }
+        }*/
 
 
         // 两数相加
-        public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+/*        public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
             // 创建一个头结点会方便很多，返回的时候返回 res.next 即可自动去掉这个头
             ListNode res = new ListNode(), rear = res;
             // flag 表示当前是否需要进位
@@ -263,7 +263,7 @@ public class LinkedList {
             }
             return res.next;
 
-        }
+        }*/
 
 /*        class Node {
             public int val;
@@ -273,7 +273,7 @@ public class LinkedList {
         };*/
 
         // 扁平化多级双向链表
-        public Node flatten(Node head) {
+/*        public Node flatten(Node head) {
             // 递归退出条件
             if(head == null) return null;
             if(head.child == null) {
@@ -293,7 +293,7 @@ public class LinkedList {
             head.child = null;
 
             return head;
-        }
+        }*/
 
         class Node {
             int val;
